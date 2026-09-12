@@ -1,0 +1,150 @@
+const { CANONICAL_ROLES } = require('../utils/roles');
+
+/**
+ * Action-based permissions. Server enforcement must use these codes (or
+ * roleAllowed as a compatibility adapter). Frontend guards are UX only.
+ */
+const PERMISSIONS = Object.freeze({
+  EMPLOYEE_READ: 'employee.read',
+  EMPLOYEE_CREATE: 'employee.create',
+  EMPLOYEE_UPDATE: 'employee.update',
+  EMPLOYEE_DELETE: 'employee.delete',
+
+  CANDIDATE_READ: 'candidate.read',
+  CANDIDATE_CREATE: 'candidate.create',
+  CANDIDATE_ADVANCE_STAGE: 'candidate.advance_stage',
+
+  JOB_CREATE: 'job.create',
+  JOB_UPDATE: 'job.update',
+  JOB_CLOSE: 'job.close',
+  JOB_READ: 'job.read',
+
+  ONBOARDING_READ: 'onboarding.read',
+  ONBOARDING_APPROVE: 'onboarding.approve',
+  ONBOARDING_VERIFY_DOCUMENTS: 'onboarding.verify_documents',
+
+  PROJECT_READ: 'project.read',
+  PROJECT_CREATE: 'project.create',
+  PROJECT_ASSIGN_MANAGER: 'project.assign_manager',
+  PROJECT_ASSIGN_EMPLOYEE: 'project.assign_employee',
+
+  LEAVE_APPLY: 'leave.apply',
+  LEAVE_APPROVE: 'leave.approve',
+  LEAVE_READ_TEAM: 'leave.read_team',
+  LEAVE_READ_ALL: 'leave.read_all',
+  LEAVE_MANAGE_POLICY: 'leave.manage_policy',
+
+  ATTENDANCE_READ: 'attendance.read',
+  ATTENDANCE_MANAGE: 'attendance.manage',
+
+  TIMESHEET_SUBMIT: 'timesheet.submit',
+  TIMESHEET_APPROVE: 'timesheet.approve',
+  TIMESHEET_READ_TEAM: 'timesheet.read_team',
+
+  TASK_READ: 'task.read',
+  TASK_MANAGE: 'task.manage',
+  TASK_UPDATE_OWN: 'task.update_own',
+
+  PAYROLL_READ_SELF: 'payroll.read_self',
+  PAYROLL_MANAGE: 'payroll.manage',
+
+  COMPANY_MANAGE: 'company.manage',
+  BILLING_MANAGE: 'billing.manage',
+  ANNOUNCEMENT_MANAGE: 'announcement.manage',
+  ANNOUNCEMENT_READ: 'announcement.read',
+  FILE_READ_HR: 'file.read_hr',
+  SUPERADMIN: 'platform.superadmin'
+});
+
+const ALL_PERMISSIONS = Object.freeze(Object.values(PERMISSIONS));
+
+const ROLE_PERMISSIONS = Object.freeze({
+  [CANONICAL_ROLES.SUPERADMIN]: [PERMISSIONS.SUPERADMIN, PERMISSIONS.BILLING_MANAGE, PERMISSIONS.COMPANY_MANAGE],
+
+  [CANONICAL_ROLES.COMPANY_ADMIN]: ALL_PERMISSIONS.filter((p) => p !== PERMISSIONS.SUPERADMIN),
+
+  [CANONICAL_ROLES.HR]: [
+    PERMISSIONS.EMPLOYEE_READ,
+    PERMISSIONS.EMPLOYEE_CREATE,
+    PERMISSIONS.EMPLOYEE_UPDATE,
+    PERMISSIONS.CANDIDATE_READ,
+    PERMISSIONS.CANDIDATE_CREATE,
+    PERMISSIONS.CANDIDATE_ADVANCE_STAGE,
+    PERMISSIONS.JOB_CREATE,
+    PERMISSIONS.JOB_UPDATE,
+    PERMISSIONS.JOB_CLOSE,
+    PERMISSIONS.JOB_READ,
+    PERMISSIONS.ONBOARDING_READ,
+    PERMISSIONS.ONBOARDING_APPROVE,
+    PERMISSIONS.ONBOARDING_VERIFY_DOCUMENTS,
+    PERMISSIONS.PROJECT_READ,
+    PERMISSIONS.LEAVE_APPLY,
+    PERMISSIONS.LEAVE_APPROVE,
+    PERMISSIONS.LEAVE_READ_TEAM,
+    PERMISSIONS.LEAVE_READ_ALL,
+    PERMISSIONS.LEAVE_MANAGE_POLICY,
+    PERMISSIONS.ATTENDANCE_READ,
+    PERMISSIONS.ATTENDANCE_MANAGE,
+    PERMISSIONS.TIMESHEET_READ_TEAM,
+    PERMISSIONS.PAYROLL_READ_SELF,
+    PERMISSIONS.ANNOUNCEMENT_MANAGE,
+    PERMISSIONS.ANNOUNCEMENT_READ,
+    PERMISSIONS.FILE_READ_HR,
+    PERMISSIONS.TASK_READ,
+    PERMISSIONS.TASK_MANAGE,
+    PERMISSIONS.TASK_UPDATE_OWN
+  ],
+
+  [CANONICAL_ROLES.MANAGER]: [
+    PERMISSIONS.EMPLOYEE_READ,
+    PERMISSIONS.CANDIDATE_READ,
+    PERMISSIONS.JOB_READ,
+    PERMISSIONS.ONBOARDING_READ,
+    PERMISSIONS.PROJECT_READ,
+    PERMISSIONS.PROJECT_ASSIGN_EMPLOYEE,
+    PERMISSIONS.LEAVE_APPLY,
+    PERMISSIONS.LEAVE_APPROVE,
+    PERMISSIONS.LEAVE_READ_TEAM,
+    PERMISSIONS.ATTENDANCE_READ,
+    PERMISSIONS.TIMESHEET_SUBMIT,
+    PERMISSIONS.TIMESHEET_APPROVE,
+    PERMISSIONS.TIMESHEET_READ_TEAM,
+    PERMISSIONS.PAYROLL_READ_SELF,
+    PERMISSIONS.ANNOUNCEMENT_MANAGE,
+    PERMISSIONS.ANNOUNCEMENT_READ,
+    PERMISSIONS.TASK_READ,
+    PERMISSIONS.TASK_MANAGE,
+    PERMISSIONS.TASK_UPDATE_OWN
+  ],
+
+  [CANONICAL_ROLES.EMPLOYEE]: [
+    PERMISSIONS.LEAVE_APPLY,
+    PERMISSIONS.ATTENDANCE_READ,
+    PERMISSIONS.TIMESHEET_SUBMIT,
+    PERMISSIONS.PAYROLL_READ_SELF,
+    PERMISSIONS.PROJECT_READ,
+    PERMISSIONS.ANNOUNCEMENT_READ,
+    PERMISSIONS.TASK_READ,
+    PERMISSIONS.TASK_UPDATE_OWN
+  ]
+});
+
+function permissionsForRole(role) {
+  const { normalizeRole } = require('../utils/roles');
+  const normalized = normalizeRole(role);
+  return ROLE_PERMISSIONS[normalized] || [];
+}
+
+function hasPermission(role, permissionCode) {
+  if (!permissionCode) return false;
+  const granted = permissionsForRole(role);
+  return granted.includes(permissionCode);
+}
+
+module.exports = {
+  PERMISSIONS,
+  ALL_PERMISSIONS,
+  ROLE_PERMISSIONS,
+  permissionsForRole,
+  hasPermission
+};

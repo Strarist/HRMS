@@ -1,0 +1,327 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default theme variables (dark) */
+    --color-primary: #3b82f6;
+    --color-primaryHover: #2563eb;
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-surfaceHover: #334155;
+    --color-text: #f8fafc;
+    --color-textSecondary: #94a3b8;
+    --color-border: #334155;
+    --color-accent: #3b82f6;
+    
+    /* Transition duration */
+    --theme-transition: 0.3s ease-in-out;
+  }
+
+  * {
+    transition: background-color var(--theme-transition),
+                border-color var(--theme-transition),
+                color var(--theme-transition);
+  }
+  
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    @apply font-sans;
+  }
+
+  /* Smooth theme transitions */
+  html {
+    transition: background-color var(--theme-transition);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: #ffffff !important;
+    @apply font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-primaryHover);
+  }
+  
+  .btn-secondary {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    @apply font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--color-surfaceHover);
+  }
+  
+  .btn-outline {
+    border: 1px solid var(--color-border);
+    background-color: transparent;
+    color: var(--color-text);
+    @apply font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-outline:hover {
+    background-color: var(--color-surface);
+  }
+  
+  .input-field {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    @apply w-full rounded-lg px-4 py-2 focus:outline-none focus:border-transparent;
+  }
+  
+  .input-field:focus {
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+  
+  .card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    @apply rounded-lg p-6 shadow-lg;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+  }
+  
+  .table {
+    width: 100%;
+    text-align: left;
+  }
+  
+  .table thead {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .table th {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-textSecondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.2s;
+  }
+
+  .table tbody tr:hover {
+    background-color: var(--color-surfaceHover);
+  }
+  
+  .table td {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-success {
+    @apply bg-green-900 text-green-400 border border-green-800;
+    background-color: rgb(20 83 45 / 0.3);
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-900 text-yellow-400 border border-yellow-800;
+    background-color: rgb(113 63 18 / 0.3);
+  }
+  
+  .badge-danger {
+    @apply bg-red-900 text-red-400 border border-red-800;
+    background-color: rgb(127 29 29 / 0.3);
+  }
+  
+  .badge-info {
+    @apply bg-blue-900 text-blue-400 border border-blue-800;
+    background-color: rgb(30 58 138 / 0.3);
+  }
+  
+  .badge-default {
+    @apply bg-gray-800 text-gray-400 border border-gray-700;
+  }
+
+  /* Theme-aware utility classes */
+  .theme-bg {
+    background-color: var(--color-background) !important;
+  }
+
+  .theme-surface {
+    background-color: var(--color-surface) !important;
+  }
+
+  .theme-text {
+    color: var(--color-text) !important;
+  }
+
+  .theme-text-secondary {
+    color: var(--color-textSecondary) !important;
+  }
+
+  .theme-border {
+    border-color: var(--color-border) !important;
+  }
+
+  .theme-primary {
+    background-color: var(--color-primary) !important;
+  }
+
+  .theme-primary-text {
+    color: var(--color-primary) !important;
+  }
+
+  /* Override hardcoded white text to be theme-aware for headings and general text */
+  /* But preserve white text on colored backgrounds (buttons, badges, etc.) */
+  h1.text-white,
+  h2.text-white,
+  h3.text-white,
+  h4.text-white,
+  h5.text-white,
+  h6.text-white,
+  p.text-white,
+  span.text-white:not([class*="bg-"]):not([class*="badge"]),
+  div.text-white:not([class*="bg-"]):not([class*="badge"]),
+  label.text-white {
+    color: var(--color-text) !important;
+  }
+
+  /* For elements that should always be white (like text on colored buttons) */
+  .text-always-white,
+  button .text-white,
+  [class*="bg-primary"] .text-white,
+  [class*="bg-blue"] .text-white,
+  [class*="bg-green"] .text-white,
+  [class*="bg-red"] .text-white,
+  [class*="bg-yellow"] .text-white,
+  [class*="bg-purple"] .text-white,
+  [class*="bg-orange"] .text-white,
+  [class*="bg-emerald"] .text-white,
+  .badge .text-white {
+    color: #ffffff !important;
+  }
+
+  /* Fix very light gray text that's invisible on light backgrounds */
+  [data-theme="light"] .text-gray-100,
+  [data-theme="light"] .text-gray-200,
+  [data-theme="light"] .text-gray-300 {
+    color: #4b5563 !important; /* gray-600 for better visibility */
+  }
+}
+
+/* Custom scrollbar - theme aware */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-textSecondary);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for sidebar - theme aware */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Sidebar active menu item styles */
+.sidebar-menu-item {
+  @apply text-gray-400 hover:bg-gray-800 hover:text-white transition-colors duration-200;
+}
+
+.sidebar-menu-item.active {
+  @apply bg-blue-600 text-white;
+}
+
+/* Submenu items */
+.sidebar-submenu-item {
+  @apply text-gray-400 hover:bg-gray-800 hover:text-white transition-colors duration-200;
+}
+
+.sidebar-submenu-item.active {
+  @apply bg-blue-600/20 text-blue-400 border-l-4 border-blue-500;
+}
+
+aside::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  opacity: 0.5;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-textSecondary);
+  opacity: 0.7;
+}
+
+/* Sidebar navigation scroll area */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-textSecondary);
+  opacity: 0.8;
+}
+
+/* Show scrollbar on hover */
+.sidebar-scroll:hover::-webkit-scrollbar-thumb {
+  opacity: 0.6;
+}
+
+/* Hide scrollbar utility for carousels */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

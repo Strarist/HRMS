@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*CREDENTIALS*
+DEVELOPMENT_CREDENTIALS.md
+secrets/
+*.pem
+*.key
+
+# Build / cache
+dist/
+build/
+.vite/
+.cache/
+coverage/
+*.log
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+*.swo
+
+# Uploads / local data
+uploads/
+temp-uploads/
+tmp/
+temp/
